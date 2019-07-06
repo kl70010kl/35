@@ -7,11 +7,13 @@ public class PlayerController : MonoBehaviour
     public float speed = 3.0f;
     public float jumpForce = 10;
     private bool isJump;
+    private bool isMove;
     private Rigidbody2D rdPlayer;
     // Start is called before the first frame update
     void Start()
     {
         isJump = true;
+        isMove = true;
         rdPlayer = GetComponent<Rigidbody2D>();
     }
 
@@ -23,20 +25,23 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isJump)
+        if (isMove)
         {
-            if (Input.GetKeyDown(KeyCode.A))
+            if (isJump)
             {
-                rdPlayer.AddForce(Vector2.up * jumpForce,
-                    ForceMode2D.Force);
-                print(1);
+                if (Input.GetKeyDown(KeyCode.A))
+                {
+                    rdPlayer.AddForce(Vector2.up * jumpForce,
+                        ForceMode2D.Force);
+                    print(1);
+                }
             }
-        }
 
 
-        float h = Input.GetAxis("Horizontal");
-        rdPlayer.velocity = new Vector2(speed * h,
-        rdPlayer.velocity.y);
+            float h = Input.GetAxis("Horizontal");
+            rdPlayer.velocity = new Vector2(speed * h,
+            rdPlayer.velocity.y);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -53,5 +58,10 @@ public class PlayerController : MonoBehaviour
         {
             isJump = false;
         }
+    }
+
+    public void SetIsMove(bool isMove)
+    {
+        this.isMove = isMove;
     }
 }
