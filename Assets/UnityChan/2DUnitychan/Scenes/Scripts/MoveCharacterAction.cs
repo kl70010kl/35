@@ -19,28 +19,43 @@ public class MoveCharacterAction : MonoBehaviour
     [SerializeField, HideInInspector] Rigidbody2D rig2d;
 
     public int hp = 4;
+    
 
-    private bool isMove;
+    private bool isAttack; //攻撃したか
+    private float AttackIntervalTimer; //攻撃間隔
+    private float timer; //タイマー
 
-    private bool isAttack;
-
+    //銃の撃つ向き
     enum GunDirection
     {
         Right,
         Left,
     }
 
-    GunDirection gunDirection;
+    GunDirection gunDirection; //銃の向き
+    
+    //プレイヤーの状態
+    public enum PlayerState
+    {
+        Active, //通常の状態
+        DroneControl, //ドローン操作状態
+        Stealth, //隠れている状態
+    }
+
+    PlayerState playerState; //プレイヤーの状態
 
     void Awake()
     {
+        //初期化
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        rig2d = GetComponent<Rigidbody2D>();
-
-        isMove = true;
-        isAttack = false;
-        gunDirection = GunDirection.Right;
+        rig2d = GetComponent<Rigidbody2D>(); //リジッドボディ取得
+        
+        isAttack = false; //攻撃はしていないのでfalse
+        gunDirection = GunDirection.Right; //初期状態は右向き
+        playerState = PlayerState.Active; //初期状態は通常状態
+        AttackIntervalTimer = 0.5f; //攻撃できるのは0.5秒間隔
+        timer = AttackIntervalTimer; //攻撃間隔でタイマー初期化
     }
 
     void Update()
@@ -48,7 +63,8 @@ public class MoveCharacterAction : MonoBehaviour
         float axis = Input.GetAxis("Horizontal");
         bool isDown = Input.GetAxisRaw("Vertical") < 0;
 
-        if (isMove)
+        //Active(通常状態)ならプレイヤーに関する操作可
+        if (playerState == PlayerState.Active)
         {
             Vector2 velocity = rig2d.velocity;
             if (Input.GetButtonDown("Jump"))
@@ -80,10 +96,23 @@ public class MoveCharacterAction : MonoBehaviour
             animator.SetFloat(hashSpeed, Mathf.Abs(axis));
             if (Input.GetKeyDown(KeyCode.C))
             {
-                animator.SetTrigger("Gun");
+                if (isAttack == false)
+                {
+                    animator.SetTrigger("Gun");
+                    isAttack = true;
+                }
             }
 
-            
+            if (isAttack)
+            {
+                timer -= Time.deltaTime;
+            }
+
+            if(timer <= 0)
+            {
+                isAttack = false;
+                timer = AttackIntervalTimer;
+            }
 
         }
     }
@@ -94,8 +123,13 @@ public class MoveCharacterAction : MonoBehaviour
         animator.SetTrigger(hashDamage);
     }
 
-    public void SetIsMove(bool isMove)
+    public void SetPlayerState(PlayerState state)
     {
-        this.isMove = isMove;
+        playerState = state;
+    }
+
+    public PlayerState GetPlayerState()
+    {
+        return playerState;
     }
 }

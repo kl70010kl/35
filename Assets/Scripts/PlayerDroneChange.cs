@@ -42,13 +42,13 @@ public class PlayerDroneChange : MonoBehaviour
     {
         drone.SetActive(true);
         drone.transform.position = player.transform.position + new Vector3(1, 0, 0);
-        characterAction.SetIsMove(false);
+        characterAction.SetPlayerState(MoveCharacterAction.PlayerState.DroneControl);
         
     }
 
     void PlayerMove()
     {
-        characterAction.SetIsMove(true);
+        characterAction.SetPlayerState(MoveCharacterAction.PlayerState.Active);
         drone.SetActive(false);
     }
 }
