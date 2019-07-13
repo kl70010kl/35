@@ -20,7 +20,7 @@ public class SearchCharacter : MonoBehaviour
         
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
@@ -28,11 +28,11 @@ public class SearchCharacter : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if(collision.tag == "Player")
-        {
-            enemyMove.SetEnemyState(EnemyMove.EnemyState.Walk);
-        }
-    }
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    if(collision.tag == "Player")
+    //    {
+    //        enemyMove.SetEnemyState(EnemyMove.EnemyState.Walk);
+    //    }
+    //}
 }

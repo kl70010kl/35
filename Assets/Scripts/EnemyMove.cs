@@ -23,7 +23,7 @@ public class EnemyMove : MonoBehaviour
     //追いかけるターゲット
     public GameObject player;
     //追いかける速度
-    private Vector2 chaseVelocity;
+    private Vector2 velocityDirection;
 
     private void Start()
     {
@@ -32,22 +32,27 @@ public class EnemyMove : MonoBehaviour
         isRight = true;
         rd2DEnemy = GetComponent<Rigidbody2D>();
         state = EnemyState.Walk;
-        chaseVelocity = Vector2.zero;
+        velocityDirection = Vector2.zero;
     }
 
     private void Update()
     {
-        //タイマーを動かす
-        timer += Time.deltaTime;
-
-        //2秒以上になったら、
-        if (timer >= 2.0f)
+        if (state == EnemyState.Walk)
         {
-            //右向きかどうかのフラグを反転
-            isRight = !isRight;
-            //タイマーを0に
-            timer = 0;
+            //タイマーを動かす
+            timer += Time.deltaTime;
+
+            //2秒以上になったら、
+            if (timer >= 2.0f)
+            {
+                //右向きかどうかのフラグを反転
+                isRight = !isRight;
+                //タイマーを0に
+                timer = 0;
+            }
         }
+        print(rd2DEnemy.velocity);
+        print(state);
     }
 
     private void FixedUpdate()
@@ -72,11 +77,19 @@ public class EnemyMove : MonoBehaviour
         if(state == EnemyState.Chase)
         {
             //プレイヤーとエネミーの位置からおおよその向きを計算
-            chaseVelocity = player.transform.position - gameObject.transform.position;
-            //正規化
-            chaseVelocity.Normalize();
+            velocityDirection.x = player.transform.position.x - gameObject.transform.position.x;
+            
+            if(velocityDirection.x >= 0)
+            {
+                velocityDirection.x = 1;
+            }
+            else if(velocityDirection.x < 0)
+            {
+                velocityDirection.x = -1;
+            }
+
             //velocityをchaseVelocityに
-            rd2DEnemy.velocity = chaseVelocity / 10 * 5;
+            rd2DEnemy.velocity = new Vector2(0.5f * velocityDirection.x, 0);
         }
     }
 

@@ -1,21 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class DroneController : MonoBehaviour
 {
     public float speed = 3.0f;
     Rigidbody2D rd;
+    public GameObject block;
+    private int blockCreateCount;
+
     // Start is called before the first frame update
     void Start()
     {
         rd = GetComponent<Rigidbody2D>();
+        blockCreateCount = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (blockCreateCount <= 2)
+        {
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                Instantiate(block, transform.position + new Vector3(0, -0.16f, 0), transform.rotation);
+                blockCreateCount++;
+            }
+        }
     }
 
     private void FixedUpdate()
