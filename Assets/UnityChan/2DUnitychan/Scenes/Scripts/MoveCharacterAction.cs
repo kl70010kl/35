@@ -24,15 +24,16 @@ public class MoveCharacterAction : MonoBehaviour
     private bool isAttack; //攻撃したか
     private float AttackIntervalTimer; //攻撃間隔
     private float timer; //タイマー
-
+    private bool isJump;
+    
     //銃の撃つ向き
-    enum GunDirection
+    public enum GunDirection
     {
         Right,
         Left,
     }
 
-    GunDirection gunDirection; //銃の向き
+    public GunDirection gunDirection; //銃の向き
     
     //プレイヤーの状態
     public enum PlayerState
@@ -56,6 +57,7 @@ public class MoveCharacterAction : MonoBehaviour
         playerState = PlayerState.Active; //初期状態は通常状態
         AttackIntervalTimer = 0.5f; //攻撃できるのは0.5秒間隔
         timer = AttackIntervalTimer; //攻撃間隔でタイマー初期化
+        isJump = false;
     }
 
     void Update()
@@ -69,7 +71,11 @@ public class MoveCharacterAction : MonoBehaviour
             Vector2 velocity = rig2d.velocity;
             if (Input.GetButtonDown("Jump"))
             {
-                velocity.y = 5;
+                if (isJump == false)
+                {
+                    velocity.y = 5;
+                    isJump = true;
+                }
             }
             if (axis != 0)
             {
@@ -123,6 +129,14 @@ public class MoveCharacterAction : MonoBehaviour
         animator.SetTrigger(hashDamage);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Stage"))
+        {
+            isJump = false;
+        }
+    }
+
     public void SetPlayerState(PlayerState state)
     {
         playerState = state;
@@ -131,5 +145,15 @@ public class MoveCharacterAction : MonoBehaviour
     public PlayerState GetPlayerState()
     {
         return playerState;
+    }
+
+    public GunDirection GetGunDirection()
+    {
+        return gunDirection;
+    }
+
+    public bool IsJump()
+    {
+        return isJump;
     }
 }
