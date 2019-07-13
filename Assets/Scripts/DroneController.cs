@@ -9,6 +9,7 @@ public class DroneController : MonoBehaviour
     Rigidbody2D rd;
     public GameObject block;
     private int blockCreateCount;
+    public GameObject camera;
 
     // Start is called before the first frame update
     void Start()
@@ -32,15 +33,16 @@ public class DroneController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        float droneCameraPos = this.transform.position.x - camera.transform.position.x;
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) && droneCameraPos == 0)
         {
             h = 1;
-            
+
         }
-        else if (Input.GetKey(KeyCode.LeftArrow))
+        else if (Input.GetKey(KeyCode.LeftArrow) && droneCameraPos == 0)
         {
             h = -1;
         }
@@ -49,11 +51,12 @@ public class DroneController : MonoBehaviour
             h = 0;
         }
 
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow) && droneCameraPos == 0)
         {
             v = 1;
         }
-        else if (Input.GetKey(KeyCode.DownArrow))
+
+        else if (Input.GetKey(KeyCode.DownArrow) && droneCameraPos == 0)
         {
             v = -1;
         }

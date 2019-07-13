@@ -8,6 +8,7 @@ public class PlayerDroneChange : MonoBehaviour
     public GameObject drone;
     private MoveCharacterAction characterAction;
     private bool isPlayer;
+    private bool flag;
 
     // Start is called before the first frame update
     void Start()
@@ -15,6 +16,7 @@ public class PlayerDroneChange : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         characterAction = player.GetComponent<MoveCharacterAction>();
         isPlayer = true;
+        flag = false;
     }
 
     // Update is called once per frame
@@ -28,10 +30,15 @@ public class PlayerDroneChange : MonoBehaviour
                 PlayerMove();
                 print(0);
             }
-            else if (isPlayer == false)
+            else if (isPlayer == false && flag == false)
             {
                 DroneCreate();
                 print(1);
+                flag = true;
+            }
+            else if (isPlayer == false && flag == true)
+            {
+                DroneCreate2();
             }
         }
         
@@ -46,9 +53,13 @@ public class PlayerDroneChange : MonoBehaviour
         
     }
 
+    void DroneCreate2()
+    {
+        characterAction.SetPlayerState(MoveCharacterAction.PlayerState.DroneControl);
+    }
+
     void PlayerMove()
     {
         characterAction.SetPlayerState(MoveCharacterAction.PlayerState.Active);
-        drone.SetActive(false);
     }
 }
