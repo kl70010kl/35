@@ -24,7 +24,11 @@ public class EnemyMove : MonoBehaviour
     public GameObject player;
     //追いかける速度
     private Vector2 velocityDirection;
+    //プレイヤーとエネミーの距離
+    private float distance;
 
+    public GameObject WarningSliderCtr;
+    private WarnigUI warnigUI;
     private void Start()
     {
         //初期化処理
@@ -33,6 +37,8 @@ public class EnemyMove : MonoBehaviour
         rd2DEnemy = GetComponent<Rigidbody2D>();
         state = EnemyState.Walk;
         velocityDirection = Vector2.zero;
+        rd2DEnemy.constraints = RigidbodyConstraints2D.FreezeRotation;
+        warnigUI = WarningSliderCtr.GetComponent<WarnigUI>();
     }
 
     private void Update()
@@ -50,9 +56,19 @@ public class EnemyMove : MonoBehaviour
                 //タイマーを0に
                 timer = 0;
             }
+            
         }
-        print(rd2DEnemy.velocity);
-        print(state);
+        //画像が回転しなようにRotationを固定
+        transform.localRotation = new Quaternion(0,0,0,0);
+
+        distance = Vector2.Distance(player.transform.position, transform.position);
+        if (state == EnemyState.Chase)
+        {
+            if (distance >= 1.5f)
+            {
+                state = EnemyState.Walk;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -77,19 +93,16 @@ public class EnemyMove : MonoBehaviour
         if(state == EnemyState.Chase)
         {
             //プレイヤーとエネミーの位置からおおよその向きを計算
-            velocityDirection.x = player.transform.position.x - gameObject.transform.position.x;
-            
+            velocityDirection.x = gameObject.transform.position.x - player.transform.position.x;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(player.transform.position - transform.position), 0.3f);
             if(velocityDirection.x >= 0)
             {
-                velocityDirection.x = 1;
+                rd2DEnemy.position += Vector2.left / 100;
             }
             else if(velocityDirection.x < 0)
             {
-                velocityDirection.x = -1;
+                rd2DEnemy.position += Vector2.right / 100;
             }
-
-            //velocityをchaseVelocityに
-            rd2DEnemy.velocity = new Vector2(0.5f * velocityDirection.x, 0);
         }
     }
 
@@ -98,5 +111,9 @@ public class EnemyMove : MonoBehaviour
         this.state = state;
     }
 
+    public EnemyState GetEnemyState()
+    {
+        return state;
+    }
 }
 

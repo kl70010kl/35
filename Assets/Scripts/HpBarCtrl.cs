@@ -11,17 +11,13 @@ public class HpBarCtrl : MonoBehaviour
     {
         _slider = GameObject.Find("Slider").GetComponent<Slider>();
     }
-    float _hp = 0;
+    float _hp = 100;
     
 
     // Update is called once per frame
     void Update()
     {
-        _hp += 1.0f;
-        if(_hp>100)
-        {
-            _hp = 0;
-        }
+        
         _slider.value = _hp;
             
     }
