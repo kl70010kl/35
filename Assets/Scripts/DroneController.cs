@@ -15,12 +15,14 @@ public class DroneController : MonoBehaviour
     void Start()
     {
         rd = GetComponent<Rigidbody2D>();
-        blockCreateCount = 0;
+        //blockCreateCount = 0;
+        blockCreateCount = Block.blockCount;
     }
 
     // Update is called once per frame
     void Update()
     {
+        blockCreateCount = Block.blockCount;
         if (blockCreateCount <= 2)
         {
             if (Input.GetKeyDown(KeyCode.B))

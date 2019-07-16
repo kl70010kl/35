@@ -15,7 +15,7 @@ public class SearchCharacter : MonoBehaviour
     {
         enemy = GameObject.FindGameObjectWithTag("Enemy");
         enemyMove = enemy.GetComponent<EnemyMove>();
-        warningDigree = 25;
+        warningDigree = 12.5f;
         warnigUI = warnngSliderCtr.GetComponent<WarnigUI>();
     }
 
@@ -33,6 +33,4 @@ public class SearchCharacter : MonoBehaviour
             warnigUI.GetWarningDgree(warningDigree);
         }
     }
-
-    
 }
