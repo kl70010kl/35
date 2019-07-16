@@ -10,6 +10,7 @@ public class EnemyMove : MonoBehaviour
         Walk,
         Wait,
         Chase,
+        Stop,
     };
 
     //エネミーのリジッドボディ
@@ -103,6 +104,12 @@ public class EnemyMove : MonoBehaviour
             {
                 rd2DEnemy.position += Vector2.right / 100;
             }
+        }
+
+        //エネミーの状態がStopなら
+        if(state == EnemyState.Stop)
+        {
+            return;
         }
     }
 
