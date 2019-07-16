@@ -30,6 +30,9 @@ public class EnemyMove : MonoBehaviour
 
     public GameObject WarningSliderCtr;
     private WarnigUI warnigUI;
+
+    float enemyVel;
+
     private void Start()
     {
         //初期化処理
@@ -40,6 +43,8 @@ public class EnemyMove : MonoBehaviour
         velocityDirection = Vector2.zero;
         rd2DEnemy.constraints = RigidbodyConstraints2D.FreezeRotation;
         warnigUI = WarningSliderCtr.GetComponent<WarnigUI>();
+
+        enemyVel = WarnigUI.enemySpeed;
     }
 
     private void Update()
@@ -74,6 +79,8 @@ public class EnemyMove : MonoBehaviour
 
     private void FixedUpdate()
     {
+        enemyVel = WarnigUI.enemySpeed;
+
         //現在の状態がWalkなら、
         if (state == EnemyState.Walk)
         {
@@ -98,11 +105,13 @@ public class EnemyMove : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(player.transform.position - transform.position), 0.3f);
             if(velocityDirection.x >= 0)
             {
-                rd2DEnemy.position += Vector2.left / 100;
+                //rd2DEnemy.position += Vector2.left / 100;
+                rd2DEnemy.position += Vector2.left / (150 - enemyVel);
             }
             else if(velocityDirection.x < 0)
             {
-                rd2DEnemy.position += Vector2.right / 100;
+                //rd2DEnemy.position += Vector2.right / 100;
+                rd2DEnemy.position += Vector2.right / (150 - enemyVel);
             }
         }
 
